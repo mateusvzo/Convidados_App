@@ -2,6 +2,7 @@ package com.veloso.convidados_app.repository
 
 import android.content.ContentValues
 import android.content.Context
+import com.veloso.convidados_app.constants.DataBaseConstants
 import com.veloso.convidados_app.model.GuestModel
 
 class GuestRepository private constructor(context: Context) {
@@ -26,8 +27,8 @@ class GuestRepository private constructor(context: Context) {
             var presence = if (guest.presence) 1 else 0
 
             val values = ContentValues()
-            values.put("name", guest.name)
-            values.put("presence", presence)
+            values.put(DataBaseConstants.GUEST.COLUMNS.NAME, guest.name)
+            values.put(DataBaseConstants.GUEST.COLUMNS.PRESENCE, presence)
 
             db.insert("Guest", null, values)
 
