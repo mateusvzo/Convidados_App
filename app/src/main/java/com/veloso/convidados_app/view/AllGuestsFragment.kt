@@ -15,27 +15,34 @@ class AllGuestsFragment : Fragment() {
 
     private var _binding: FragmentAllGuestsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModel: AllGuestsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel =
-            ViewModelProvider(this).get(AllGuestsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(AllGuestsViewModel::class.java)
 
         _binding = FragmentAllGuestsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        viewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        observe()
+
+        viewModel.getAll()
+
+
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun observe() {
+        viewModel.guests.observe(viewLifecycleOwner) { it ->
+            it.map { it.name }
+        }
     }
 }
