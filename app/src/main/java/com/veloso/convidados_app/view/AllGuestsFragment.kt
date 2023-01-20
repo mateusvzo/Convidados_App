@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.veloso.convidados_app.databinding.FragmentAllGuestsBinding
 import com.veloso.convidados_app.view.adapter.GuestsAdapter
+import com.veloso.convidados_app.view.listener.OnGuestListener
 import com.veloso.convidados_app.viewmodel.AllGuestsViewModel
 
 
@@ -31,11 +31,30 @@ class AllGuestsFragment : Fragment() {
         //Adapter
         binding.recyclerAllGuests.adapter = adapter
 
+        val listener = object : OnGuestListener {
+            override fun onClick(id: Int) {
+                Toast.makeText(context, "Fui clicado seu corno ${id}", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDelete(id: Int) {
+                viewModel.deleteGuest(id)
+                viewModel.getAll()
+            }
+
+        }
+
+        adapter.attachListener(listener)
+
         viewModel.getAll()
 
         observe()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAll()
     }
 
     override fun onDestroyView() {
