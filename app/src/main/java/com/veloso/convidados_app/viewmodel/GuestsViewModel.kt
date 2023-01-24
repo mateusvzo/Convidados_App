@@ -4,11 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.veloso.convidados_app.model.GuestModel
 import com.veloso.convidados_app.repository.GuestRepository
 
-class AllGuestsViewModel(application: Application) : AndroidViewModel(application) {
+class GuestsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = GuestRepository.getInstance(application.applicationContext)
 
@@ -21,5 +20,13 @@ class AllGuestsViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun deleteGuest(id: Int) {
         repository.delete(id)
+    }
+
+    fun getPresent() {
+        listAllGuests.value = repository.getPresent()
+    }
+
+    fun getAbsent() {
+        listAllGuests.value = repository.getAbsent()
     }
 }

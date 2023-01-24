@@ -161,8 +161,25 @@ class GuestRepository private constructor(context: Context) {
         try {
             val db = guestDataBase.readableDatabase
 
-            val cursor =
-                db.rawQuery("SELECT id, name, presence FROM Guest WHERE presence = 1", null)
+            val projection = arrayOf(
+                DataBaseConstants.GUEST.COLUMNS.ID,
+                DataBaseConstants.GUEST.COLUMNS.NAME,
+                DataBaseConstants.GUEST.COLUMNS.PRESENCE
+            )
+
+            val selection = DataBaseConstants.GUEST.COLUMNS.PRESENCE + " = ?"
+
+            val args = arrayOf(1.toString())
+
+            val cursor = db.query(
+                DataBaseConstants.GUEST.TABLE_NAME,
+                projection,
+                selection,
+                args,
+                null,
+                null,
+                null
+            )
 
             if (cursor != null && cursor.count > 0) {
                 while (cursor.moveToNext()) {
@@ -171,12 +188,13 @@ class GuestRepository private constructor(context: Context) {
                     val name =
                         cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME))
                     val presence =
-                        cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE))
+                        (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
 
-                    list.add(GuestModel(id, name, presence == 1))
+                    list.add(GuestModel(id, name, presence))
                 }
             }
             cursor.close()
+            list
         } catch (e: Exception) {
             return list
         }
@@ -189,8 +207,25 @@ class GuestRepository private constructor(context: Context) {
         try {
             val db = guestDataBase.readableDatabase
 
-            val cursor =
-                db.rawQuery("SELECT id, name, presence FROM Guest WHERE presence = 0", null)
+            val projection = arrayOf(
+                DataBaseConstants.GUEST.COLUMNS.ID,
+                DataBaseConstants.GUEST.COLUMNS.NAME,
+                DataBaseConstants.GUEST.COLUMNS.PRESENCE
+            )
+
+            val selection = DataBaseConstants.GUEST.COLUMNS.PRESENCE + " = ?"
+
+            val args = arrayOf(0.toString())
+
+            val cursor = db.query(
+                DataBaseConstants.GUEST.TABLE_NAME,
+                projection,
+                selection,
+                args,
+                null,
+                null,
+                null
+            )
 
             if (cursor != null && cursor.count > 0) {
                 while (cursor.moveToNext()) {
@@ -199,12 +234,13 @@ class GuestRepository private constructor(context: Context) {
                     val name =
                         cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME))
                     val presence =
-                        cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE))
+                        (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
 
-                    list.add(GuestModel(id, name, presence == 1))
+                    list.add(GuestModel(id, name, presence))
                 }
             }
             cursor.close()
+            list
         } catch (e: Exception) {
             return list
         }

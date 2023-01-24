@@ -46,7 +46,7 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
     private fun observe() {
         viewModel.guest.observe(this, Observer {
             binding.editName.setText(it.name)
-            if(it.presence) {
+            if (it.presence) {
                 binding.radioPresent.isChecked = true
             } else {
                 binding.radioAbsent.isChecked = true
@@ -54,13 +54,16 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
         })
 
         viewModel.saveGuest.observe(this, Observer {
-
+            if (it != "") {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                finish()
+            }
         })
     }
 
     private fun loadData() {
         val bundle = intent.extras
-        if(bundle != null) {
+        if (bundle != null) {
             guestId = bundle.getInt(DataBaseConstants.GUEST.ID)
             viewModel.get(guestId)
         }
